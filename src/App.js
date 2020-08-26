@@ -10,7 +10,7 @@ const App = () => {
     const search = async (e) =>{
         if(e.key ==='Enter'){
             const data = await fetchWeather(query);
-
+            navigator.vibrate(20);
             setWeather(data);
             setQuery(' ');
         }
