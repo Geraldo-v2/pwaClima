@@ -4,27 +4,16 @@ const urlsToCache = [ 'index.html', 'offline.html' ];
 const self = this;
 
 // Install SW
-let deferredPrompt; // Allows to show the install prompt
-const installButton = document.getElementById("btn-instalar");
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                console.log('Opened cache');
 
-window.addEventListener("beforeinstallprompt", e => {
-  console.log("beforeinstallprompt fired");
-  deferredPrompt = e;
-  installButton.addEventListener("click", installApp);
+                return cache.addAll(urlsToCache);
+            })
+    )
 });
-
-function installApp() {
-    deferredPrompt.prompt();
-  
-    deferredPrompt.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("PWA setup accepted");
-      } else {
-        console.log("PWA setup rejected");
-      }
-      deferredPrompt = null;
-    });
-  }
 
 // Listen for requests
 self.addEventListener('fetch', (event) => {
